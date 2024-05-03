@@ -1,0 +1,33 @@
+{
+    "recursosBasicos": {
+      "dinero": {
+        "descripcion": "Es un recurso fundamental para la gestión del gobierno. El usuario debería poder recaudar impuestos, administrar gastos, invertir en proyectos y tomar decisiones económicas que impacten en la economía del país.",
+        "mecanicas": [
+          "Impuestos",
+          "Gasto público",
+          "Inversión",
+          "Comercio"
+        ]
+      },
+      "poblacion": {
+        "descripcion": "La cantidad de habitantes y su bienestar son esenciales. El usuario debería poder gestionar la salud, educación, empleo y seguridad de la población, lo que influirá en su satisfacción y productividad.",
+        "mecanicas": [
+          "Salud",
+          "Educación",
+          "Empleo",
+          "Seguridad pública"
+        ]
+      },
+      "recursosNaturales": {
+        "descripcion": "El acceso a recursos como tierra, agua, minerales y energía es crucial para el desarrollo del país. El usuario debería poder explotar estos recursos de manera sostenible y responsable, generando ingresos y bienestar para la población.",
+        "mecanicas": [
+          "Extracción de recursos",
+          "Gestión ambiental",
+          "Investigación y desarrollo"
+        ]
+      }
+    },
+    "infraestructuraYServicios": {
+    }
+  }
+  

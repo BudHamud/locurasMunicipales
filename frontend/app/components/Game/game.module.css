@@ -1,0 +1,28 @@
+.calendar {
+  /* border: solid 1px #fff; */
+  display: grid;
+  grid-template-columns: repeat(7, 120px);
+  gap: 0px;
+}
+
+.panel {
+  display: flex;
+  gap: 20px;
+}
+
+.tutorial {
+  display: flex;
+  img {
+    width: 150px;
+  }
+  .bubble {
+    margin-top: 20px;
+    background-color: #555;
+    padding: 20px;
+    border-radius: 10px;
+    button {
+      background-color: #222;
+      border: solid 1px #222;
+    }
+  }
+}
