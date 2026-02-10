@@ -1,5 +1,6 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
+import { OBRAS_DISPONIBLES } from "../../data/obras";
 
 export default function CityMap({ builtItems }: { builtItems: string[] }) {
   // Coordenadas fijas para que cada obra aparezca en un lugar lógico
@@ -13,7 +14,7 @@ export default function CityMap({ builtItems }: { builtItems: string[] }) {
     <div className="relative w-full h-full bg-[#2D3E35] overflow-hidden">
       {/* Grilla decorativa estilo plano técnico */}
       <div className="absolute inset-0 opacity-10" 
-           style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', size: '40px 40px' }} />
+           style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
       
       <AnimatePresence>
         {builtItems.map((id) => {

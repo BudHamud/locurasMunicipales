@@ -93,7 +93,7 @@ export default function LeaderCard({
             CV REVISADO
           </div>
           <p className="text-[13px] font-bold text-arg-darkblue/80 leading-snug pt-2">
-            "{career}"
+            {career}
           </p>
         </div>
 
