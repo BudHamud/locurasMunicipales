@@ -1,9 +1,17 @@
 "use client";
 import { motion } from "framer-motion";
+import { Obra } from "@/data/obras";
 
-export default function ObraCard({ obra, canAfford, onBuild, isBuilt }: any) {
+interface ObraCardProps {
+  obra: Obra;
+  canAfford: boolean;
+  onBuild: (obra: Obra) => void;
+  isBuilt: boolean;
+}
+
+export default function ObraCard({ obra, canAfford, onBuild, isBuilt }: ObraCardProps) {
   return (
-    <div className={`p-4 rounded-2xl border transition-all ${isBuilt ? 'bg-blue-500/10 border-blue-500/30 opacity-60' : 'bg-white/5 border-white/5'}`}>
+    <div className={`p-4 rounded-2xl border transition-all ${isBuilt ? 'bg-blue-500/10 border-blue-500/30 opacity-60' : 'bg-white/5 border-white/5 hover:border-white/20'}`}>
       <div className="flex items-center gap-3">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl ${isBuilt ? 'bg-blue-500' : 'bg-slate-800'}`}>
           {obra.icon}
@@ -15,16 +23,21 @@ export default function ObraCard({ obra, canAfford, onBuild, isBuilt }: any) {
           </span>
         </div>
       </div>
-      
+
+      {/* Description */}
+      <p className="text-[10px] text-white/50 italic mt-2 leading-tight">
+        {obra.description}
+      </p>
+
       {!isBuilt && (
-        <button 
+        <button
           onClick={() => onBuild(obra)}
           disabled={!canAfford}
           className={`w-full mt-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all
             ${canAfford ? 'bg-blue-600 hover:bg-blue-400 text-white shadow-lg' : 'bg-slate-700 text-slate-500 cursor-not-allowed'}
           `}
         >
-          {canAfford ? 'Construir' : 'Fondos Insuficientes'}
+          {canAfford ? 'Seleccionar' : 'Fondos Insuficientes'}
         </button>
       )}
       {isBuilt && <div className="text-center mt-2 text-[9px] font-black text-blue-400 uppercase tracking-widest">Inaugurado</div>}

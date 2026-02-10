@@ -6,57 +6,58 @@ import { useState } from "react";
 
 export default function HomePage() {
   const [showSelection, setShowSelection] = useState(false);
+  const [selectedLeaderId, setSelectedLeaderId] = useState("");
 
-   const leaders = [
-     {
-       id: "ing",
-       name: "Juan 'Ing' Perez",
-       title: "Empresario",
-       stats: [
-         { label: "Obra", value: 9 },
-         { label: "Economía", value: 8 },
-         { label: "Social", value: 4 },
-       ],
-       career:
-         "Promete asfalto hasta en tu patio. Experto en licitaciones dudosas.",
-     },
-     {
-       id: "pan",
-       name: "Maria Panqueque",
-       title: "Militante",
-       stats: [
-         { label: "Social", value: 10 },
-         { label: "Oratoria", value: 9 },
-         { label: "Gestión", value: 6 },
-       ],
-       career:
-         "Conoce a cada vecino. Su récord: 5 cambios de partido en un año.",
-     },
-     {
-       id: "cho",
-       name: "Pedro Choripan",
-       title: "Gremialista",
-       stats: [
-         { label: "Piquete", value: 10 },
-         { label: "Calle", value: 10 },
-         { label: "Caja", value: 5 },
-       ],
-       career:
-         "Si hay humo, está él. Organiza paros y asados con la misma pasión.",
-     },
-     {
-       id: "lib",
-       name: "Nacho 'Bot'",
-       title: "Influencer",
-       stats: [
-         { label: "Redes", value: 10 },
-         { label: "Venta", value: 9 },
-         { label: "Realidad", value: 2 },
-       ],
-       career:
-         "Quiere privatizar hasta el aire del despacho. Gestión vía TikTok.",
-     },
-   ];
+  const leaders = [
+    {
+      id: "ing",
+      name: "Juan 'Ing' Perez",
+      title: "Empresario",
+      stats: [
+        { label: "Obra", value: 9 },
+        { label: "Economía", value: 8 },
+        { label: "Social", value: 4 },
+      ],
+      career:
+        "Promete asfalto hasta en tu patio. Experto en licitaciones dudosas.",
+    },
+    {
+      id: "pan",
+      name: "Maria Panqueque",
+      title: "Militante",
+      stats: [
+        { label: "Social", value: 10 },
+        { label: "Oratoria", value: 9 },
+        { label: "Gestión", value: 6 },
+      ],
+      career:
+        "Conoce a cada vecino. Su récord: 5 cambios de partido en un año.",
+    },
+    {
+      id: "cho",
+      name: "Pedro Choripan",
+      title: "Gremialista",
+      stats: [
+        { label: "Piquete", value: 10 },
+        { label: "Calle", value: 10 },
+        { label: "Caja", value: 5 },
+      ],
+      career:
+        "Si hay humo, está él. Organiza paros y asados con la misma pasión.",
+    },
+    {
+      id: "lib",
+      name: "Nacho 'Bot'",
+      title: "Influencer",
+      stats: [
+        { label: "Redes", value: 10 },
+        { label: "Venta", value: 9 },
+        { label: "Realidad", value: 2 },
+      ],
+      career:
+        "Quiere privatizar hasta el aire del despacho. Gestión vía TikTok.",
+    },
+  ];
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-slate-50">
@@ -150,9 +151,14 @@ export default function HomePage() {
                 Seleccioná tu líder político
               </h2>
 
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-20">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 mb-20">
                 {leaders.map((leader) => (
-                  <LeaderCard key={leader.name} {...leader} />
+                  <LeaderCard
+                    key={leader.id}
+                    {...leader}
+                    isSelected={selectedLeaderId === leader.id} // Necesitas un estado: const [selectedLeaderId, setSelectedLeaderId] = useState("");
+                    onSelect={() => setSelectedLeaderId(leader.id)}
+                  />
                 ))}
               </div>
             </div>
