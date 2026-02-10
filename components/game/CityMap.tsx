@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { useRef, useState } from "react";
 import { Tile } from "./Tile";
 import TileInspector from "./TileInspector";
+import CitySimulationLayer from "./CitySimulationLayer";
 import { CityTile } from "@/data/mapSchema";
 import { Obra } from "@/data/obras";
-
-const GRID_SIZE = 20; // 20x20 celdas
+import { Agent } from "@/hooks/useCitySimulation";
 
 interface CityMapProps {
   mapData: CityTile[];
@@ -15,7 +15,9 @@ interface CityMapProps {
   onPlacementSelect: (tile: CityTile) => void;
   onTileAction: (actionId: string, tile: CityTile) => void;
   currentBudget: number;
-  scale: number; // New prop
+  scale: number;
+  gridSize?: number; // Optional prop, default to 25
+  agents: Agent[];
 }
 
 export default function CityMap({
@@ -25,7 +27,9 @@ export default function CityMap({
   onPlacementSelect,
   onTileAction,
   currentBudget,
-  scale // Destructure new prop
+  scale,
+  gridSize = 25,
+  agents
 }: CityMapProps) {
   const constraintsRef = useRef(null);
   // Removed local scale state
@@ -79,12 +83,12 @@ export default function CityMap({
         dragConstraints={constraintsRef}
         animate={{ scale }} // La escala ahora viene del padre
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="origin-center shadow-2xl"
+        className="grid absolute origin-center shadow-2xl"
         style={{
-          gridTemplateColumns: `repeat(${GRID_SIZE}, 60px)`,
-          gridTemplateRows: `repeat(${GRID_SIZE}, 60px)`,
-          width: GRID_SIZE * 60,
-          height: GRID_SIZE * 60,
+          gridTemplateColumns: `repeat(${gridSize}, 60px)`,
+          gridTemplateRows: `repeat(${gridSize}, 60px)`,
+          width: gridSize * 60,
+          height: gridSize * 60,
           x: "-25%", y: "-25%"
         }}
       >
@@ -102,6 +106,8 @@ export default function CityMap({
             onMouseLeave={() => setHoveredTileId(null)}
           />
         ))}
+        {/* Agents Simulation Layer */}
+        <CitySimulationLayer agents={agents} gridSize={gridSize} />
       </motion.div>
     </div>
   );

@@ -25,6 +25,11 @@ export function Tile({
 }: TileProps) {
   const getVisuals = () => {
     switch (type) {
+      case 'empty':
+        return {
+          icon: '',
+          color: 'bg-white/5 hover:bg-white/10' // Subtle visibility for empty lots
+        };
       case 'street':
         return {
           icon: '', // NO ICON - just color

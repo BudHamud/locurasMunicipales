@@ -18,9 +18,20 @@ export function usePopulation(
     initialCount: number = 200,
     initialHomelessPercent: number = 0.1
 ) {
-    const [citizens, setCitizens] = useState<Citizen[]>(() =>
-        generateInitialPopulation(initialCount, initialHomelessPercent)
-    );
+    const [citizens, setCitizens] = useState<Citizen[]>(() => {
+        if (typeof window !== 'undefined') {
+            const savedCitizens = localStorage.getItem("locuras_municipales_citizens");
+            if (savedCitizens) {
+                try {
+                    return JSON.parse(savedCitizens);
+                } catch (e) {
+                    console.error("Failed to load citizens", e);
+                }
+            }
+        }
+        return generateInitialPopulation(initialCount, initialHomelessPercent);
+    });
+
     const [stats, setStats] = useState<PopulationStats>(() =>
         calculatePopulationStats(citizens, mapData)
     );
@@ -28,6 +39,8 @@ export function usePopulation(
 
     // Update population every 10 seconds (game day)
     useEffect(() => {
+        if (citizens.length === 0) return; // Wait for initialization
+
         const interval = setInterval(() => {
             const cityState: CityState = {
                 budget,
@@ -52,6 +65,9 @@ export function usePopulation(
             });
 
             setCitizens(finalCitizens);
+            // Save to localStorage
+            localStorage.setItem("locuras_municipales_citizens", JSON.stringify(finalCitizens));
+
             setStats(calculatePopulationStats(finalCitizens, mapData));
             setLastUpdate(Date.now());
         }, 10000); // Every 10 seconds

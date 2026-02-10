@@ -1,23 +1,41 @@
 "use client";
 import { useState, useEffect } from "react";
 
-export function useGameState() {
-  const [stats, setStats] = useState({
-    budget: 1240500,
-    popularity: 64,
-    corruption: 12,
-    day: 42,
-    municipio: "Villa Caos"
-  });
+interface GameState {
+  budget: number;
+  popularity: number;
+  corruption: number;
+  day: number;
+  municipio: string;
+}
 
-  // Cargar partida al iniciar
-  useEffect(() => {
-    const saved = localStorage.getItem("locuras_municipales_save");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      setStats(prev => ({ ...prev, ...parsed }));
+export function useGameState() {
+  const [stats, setStats] = useState<GameState>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem("locuras_municipales_save");
+      if (saved) {
+        try {
+          return {
+            budget: 1240500,
+            popularity: 64,
+            corruption: 12,
+            day: 42,
+            municipio: "Villa Caos",
+            ...JSON.parse(saved)
+          };
+        } catch (e) {
+          console.error("Failed to parse game state", e);
+        }
+      }
     }
-  }, []);
+    return {
+      budget: 1240500,
+      popularity: 64,
+      corruption: 12,
+      day: 42,
+      municipio: "Villa Caos"
+    };
+  });
 
   const applyEffect = (effects: { budget?: number; popularity?: number; corruption?: number }) => {
     setStats(prev => {

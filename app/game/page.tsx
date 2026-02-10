@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 // Hooks de Lógica
 import { useGameState } from "@/hooks/useGameState";
 import { useGameEngine } from "@/hooks/useGameEngine";
 import { usePopulation } from "@/hooks/usePopulation";
+import { useCitySimulation } from "@/hooks/useCitySimulation";
 
 // Datos
 import { OBRAS_DISPONIBLES, Obra } from "@/data/obras";
@@ -27,7 +28,7 @@ import MapControls from "@/components/game/layout/MapControls";
 const GRID_SIZE = 25; // Larger grid for better block layout
 
 // Generamos un mapa con bloques argentinos (4x2 edificios por manzana)
-const generateMap = (): CityTile[] => {
+export const generateMap = (): CityTile[] => {
   const tiles: CityTile[] = [];
 
   // Block configuration
@@ -97,8 +98,34 @@ export default function GamePage() {
   const { stats, applyEffect } = useGameState();
 
   // 2. Estados Locales de la Sesión
-  const [mapData, setMapData] = useState<CityTile[]>(generateMap());
-  const [builtObras, setBuiltObras] = useState<string[]>([]);
+  const [isClient, setIsClient] = useState(false);
+  const [mapData, setMapData] = useState<CityTile[]>(() => {
+    if (typeof window !== 'undefined') {
+      const savedMap = localStorage.getItem("locuras_municipales_map");
+      if (savedMap) {
+        try {
+          return JSON.parse(savedMap);
+        } catch (e) {
+          console.error("Failed to load map", e);
+        }
+      }
+    }
+    return generateMap();
+  });
+
+  const [builtObras, setBuiltObras] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      const savedBuilt = localStorage.getItem("locuras_municipales_built");
+      if (savedBuilt) {
+        try {
+          return JSON.parse(savedBuilt);
+        } catch (e) {
+          console.error("Failed to load built obras", e);
+        }
+      }
+    }
+    return [];
+  });
   const [comments, setComments] = useState<any[]>([]);
   const [activeDilema, setActiveDilema] = useState<any>(null);
   const [placementMode, setPlacementMode] = useState<Obra | null>(null);
@@ -107,7 +134,27 @@ export default function GamePage() {
   // Scale state for MapControls
   const [scale, setScale] = useState(1);
 
-  // 3. Population System
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Save Map Data
+  useEffect(() => {
+    if (isClient && mapData.length > 0) {
+      localStorage.setItem("locuras_municipales_map", JSON.stringify(mapData));
+    }
+  }, [mapData, isClient]);
+
+  // Save Built Obras
+  useEffect(() => {
+    if (isClient) {
+      localStorage.setItem("locuras_municipales_built", JSON.stringify(builtObras));
+    }
+  }, [builtObras, isClient]);
+
+
+
+  // Population System
   const { stats: populationStats, getPopulationEvents } = usePopulation(
     mapData,
     stats.budget,
@@ -117,9 +164,19 @@ export default function GamePage() {
     0.1  // 10% homeless
   );
 
-  // 3. Callbacks para el Motor de Eventos (Memorizados para evitar re-renders)
+  // Motor de Eventos
   const addComment = useCallback((newComment: any) => {
-    setComments((prev) => [...prev.slice(-9), newComment]); // Mantenemos un feed limpio de 10 items
+    // Ensure every comment has a TRULY unique ID, even if the source provides one (that might be duplicated)
+    const uniqueId = newComment.id
+      ? `${newComment.id}-${Math.random().toString(36).substr(2, 5)}`
+      : `c-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+    const commentWithId = {
+      ...newComment,
+      id: uniqueId,
+      time: newComment.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    setComments((prev) => [...prev.slice(-9), commentWithId]); // Mantenemos un feed limpio de 10 items
   }, []);
 
   const triggerDilema = useCallback((dilema: any) => {
@@ -243,6 +300,13 @@ export default function GamePage() {
   const handleZoomOut = () => setScale(prev => Math.max(prev - 0.2, 0.5));
   const handleResetScale = () => setScale(1);
 
+  // 6. Simulation Layer
+  const agents = useCitySimulation(mapData);
+
+  if (!isClient) {
+    return <div className="h-screen w-full bg-[#344E41] flex items-center justify-center text-white font-black text-2xl">Cargando Villa Caos...</div>;
+  }
+
   return (
     <main className="h-screen w-full bg-[#344E41] p-4 flex flex-col gap-4 overflow-hidden font-sans text-slate-200">
 
@@ -271,6 +335,8 @@ export default function GamePage() {
             onTileAction={handleTileAction}
             currentBudget={stats.budget}
             scale={scale}
+            gridSize={GRID_SIZE}
+            agents={agents}
           />
 
           {/* Dilemas Emergentes */}
