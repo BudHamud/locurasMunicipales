@@ -16,9 +16,9 @@ interface HeaderProps {
 
 export default function Header({ stats, populationStats }: HeaderProps) {
     return (
-        <header className="bg-black/30 backdrop-blur-md p-4 rounded-[2rem] border border-white/10 flex justify-between items-center shadow-2xl z-20">
-            <div className="flex flex-col">
-                <h1 className="text-xl font-black tracking-tighter text-blue-400 uppercase leading-none">
+        <header className="sticky top-0 bg-black/30 backdrop-blur-md p-4 rounded-[2rem] border border-white/10 flex flex-col md:flex-row justify-between items-center shadow-2xl z-20 gap-4">
+            <div className="flex flex-col items-center md:items-start w-full md:w-auto">
+                <h1 className="text-xl font-black tracking-tighter text-blue-400 uppercase leading-none hidden md:block">
                     Locuras Municipales
                 </h1>
                 <span className="text-[10px] font-bold opacity-60 uppercase tracking-widest italic">
@@ -26,7 +26,7 @@ export default function Header({ stats, populationStats }: HeaderProps) {
                 </span>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 custom-scrollbar">
                 <StatBadge icon="💵" label="Presupuesto" value={stats.budget} isCurrency />
                 <StatBadge icon="❤️" label="Popularidad" value={stats.popularity} />
                 <StatBadge

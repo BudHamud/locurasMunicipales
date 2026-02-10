@@ -95,7 +95,7 @@ export default function HomePage() {
               ☀️
             </motion.div>
 
-            <h1 className="text-6xl md:text-9xl font-black text-arg-darkblue text-center tracking-tighter mb-8 z-10 drop-shadow-[0_5px_0_white]">
+            <h1 className="text-5xl md:text-9xl font-black text-arg-darkblue text-center tracking-tighter mb-8 z-10 drop-shadow-[0_5px_0_white]">
               LOCURAS <br />
               <span className="text-arg-gold drop-shadow-[0_5px_0_var(--arg-darkblue)]">
                 MUNICIPALES
@@ -106,7 +106,7 @@ export default function HomePage() {
               <motion.div
                 initial={{ scale: 0, rotate: -10 }}
                 animate={{ scale: 1, rotate: -5 }}
-                className="absolute -left-4 top-0 bg-white border-4 border-arg-darkblue p-6 rounded-3xl shadow-[8px_8px_0px_var(--arg-darkblue)] z-30 max-w-xs"
+                className="relative md:absolute md:-left-4 md:top-0 mb-8 md:mb-0 bg-white border-4 border-arg-darkblue p-6 rounded-3xl shadow-[8px_8px_0px_var(--arg-darkblue)] z-30 max-w-xs"
               >
                 <p className="font-black text-xl text-arg-darkblue uppercase italic leading-tight">
                   ¡Elegí a tu líder, gestioná el caos y no te dejes intervenir!
@@ -119,7 +119,7 @@ export default function HomePage() {
                 </button>
               </motion.div>
 
-              <div className="ml-auto w-11/12 md:w-4/5 border-[10px] border-white rounded-3xl overflow-hidden shadow-2xl rotate-2 bg-white relative">
+              <div className="ml-auto w-full md:w-4/5 border-[10px] border-white rounded-3xl overflow-hidden shadow-2xl rotate-2 bg-white relative">
                 <Image
                   src="/img1.avif"
                   alt="City Image"

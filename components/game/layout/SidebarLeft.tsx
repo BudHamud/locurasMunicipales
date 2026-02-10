@@ -9,7 +9,7 @@ interface SidebarLeftProps {
 
 export default function SidebarLeft({ budget, builtObras, onObraClick }: SidebarLeftProps) {
     return (
-        <aside className="w-80 bg-[#1A2A2D]/80 backdrop-blur-xl rounded-[2.5rem] border border-white/5 p-6 flex flex-col shadow-2xl z-10">
+        <aside className="w-full md:w-80 bg-[#1A2A2D]/80 backdrop-blur-xl rounded-[2.5rem] border border-white/5 p-6 flex flex-col shadow-2xl z-10 h-full">
             <div className="flex items-center gap-2 mb-8 border-b border-white/10 pb-4">
                 <span className="text-blue-400 font-black">🏗️</span>
                 <h2 className="font-black uppercase text-sm tracking-tighter">Obras Públicas</h2>

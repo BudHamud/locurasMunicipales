@@ -131,6 +131,9 @@ export default function GamePage() {
   const [placementMode, setPlacementMode] = useState<Obra | null>(null);
   const [pendingPlacement, setPendingPlacement] = useState<{ obra: Obra; tile: CityTile } | null>(null);
 
+  // Mobile Navigation State
+  const [mobileTab, setMobileTab] = useState<'map' | 'build' | 'social'>('map');
+
   // Scale state for MapControls
   const [scale, setScale] = useState(1);
 
@@ -314,17 +317,21 @@ export default function GamePage() {
       <Header stats={stats} populationStats={populationStats} />
 
       {/* --- CUERPO PRINCIPAL --- */}
-      <div className="flex-1 flex gap-4 overflow-hidden relative">
+      <div className="flex-1 flex flex-col md:flex-row gap-4 overflow-hidden relative">
 
         {/* SIDEBAR IZQUIERDO: GESTIÓN DE OBRAS */}
-        <SidebarLeft
-          budget={stats.budget}
-          builtObras={builtObras}
-          onObraClick={handleObraClick}
-        />
+        {/* On mobile, only show if tab is 'build'. On desktop, always show. */}
+        <div className={`md:flex ${mobileTab === 'build' ? 'flex' : 'hidden'} flex-1 md:flex-none h-full`}>
+          <SidebarLeft
+            budget={stats.budget}
+            builtObras={builtObras}
+            onObraClick={handleObraClick}
+          />
+        </div>
 
         {/* ÁREA CENTRAL: MAPA Y MODALES */}
-        <section className="flex-1 relative rounded-[3rem] border border-white/5 bg-gradient-to-br from-black/20 to-transparent overflow-hidden shadow-inner">
+        {/* On mobile, only show if tab is 'map'. On desktop, always show. */}
+        <section className={`flex-1 relative rounded-[3rem] border border-white/5 bg-gradient-to-br from-black/20 to-transparent overflow-hidden shadow-inner ${mobileTab === 'map' ? 'flex' : 'hidden md:flex'}`}>
 
           {/* Mapa de la Ciudad */}
           <CityMap
@@ -370,9 +377,37 @@ export default function GamePage() {
         </section>
 
         {/* SIDEBAR DERECHO: VOX POPULI */}
-        <SidebarRight comments={comments} />
+        {/* On mobile, only show if tab is 'social'. On desktop, always show. */}
+        <div className={`md:flex ${mobileTab === 'social' ? 'flex' : 'hidden'} flex-1 md:flex-none h-full`}>
+          <SidebarRight comments={comments} />
+        </div>
 
       </div>
+
+      {/* MOBILE BOTTOM NAVIGATION */}
+      <nav className="md:hidden bg-[#1A2A2D] p-4 rounded-2xl flex justify-around items-center border-t border-white/10 shrink-0 z-50">
+        <button
+          onClick={() => setMobileTab('build')}
+          className={`flex flex-col items-center gap-1 ${mobileTab === 'build' ? 'text-arg-gold' : 'text-slate-400'}`}
+        >
+          <span className="text-2xl">🏗️</span>
+          <span className="text-[10px] uppercase font-black tracking-widest">Obras</span>
+        </button>
+        <button
+          onClick={() => setMobileTab('map')}
+          className={`flex flex-col items-center gap-1 ${mobileTab === 'map' ? 'text-arg-gold' : 'text-slate-400'}`}
+        >
+          <span className="text-2xl">🗺️</span>
+          <span className="text-[10px] uppercase font-black tracking-widest">Mapa</span>
+        </button>
+        <button
+          onClick={() => setMobileTab('social')}
+          className={`flex flex-col items-center gap-1 ${mobileTab === 'social' ? 'text-arg-gold' : 'text-slate-400'}`}
+        >
+          <span className="text-2xl">📢</span>
+          <span className="text-[10px] uppercase font-black tracking-widest">VoxPop</span>
+        </button>
+      </nav>
 
       {/* --- OVERLAY DE DERROTA (Opcional) --- */}
       <AnimatePresence>
